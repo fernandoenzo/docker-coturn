@@ -1,0 +1,18 @@
+[Unit]
+Description=Docker Coturn container
+Requires=docker.service
+PartOf=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+TimeoutStartSec=infinity
+ExecStartPre=/usr/bin/docker run -d -it --init --rm --network host --name Coturn --hostname Coturn fernandoenzo/coturn
+ExecStart=/usr/bin/docker logs -f Coturn
+ExecStop=-/usr/bin/docker stop Coturn
+Restart=always
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
+

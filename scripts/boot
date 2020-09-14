@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+service cron start > /dev/null 2>&1
+turnserver -c /etc/coturn/coturn.conf

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -e  # Exit immediately if a command exits with a non-zero status.
+set -x  # All executed commands are printed to the terminal
+
+mv /tmp/boot /usr/local/boot
+
+aptitude update ; aptitude install -y coturn pwgen
+
+TURN_KEY=$(pwgen 64 1)
+
+# Configuration for coturn
+sed -i 's/^#use-auth-secret/use-auth-secret/' /etc/turnserver.conf
+sed -i "/static-auth-secret=/c static-auth-secret=$TURN_KEY" /etc/turnserver.conf
+sed -i '/^#realm=/c realm=example.com' /etc/turnserver.conf
+sed -i '/^#fingerprint/c fingerprint' /etc/turnserver.conf
+sed -i '/^#verbose/c verbose' /etc/turnserver.conf
+sed -i '/^#user-quota=/c user-quota=12' /etc/turnserver.conf
+sed -i '/^#total-quota=/c total-quota=1200' /etc/turnserver.conf
+sed -i '/cert=/c cert=/etc/letsEncrypt/live/turn.example.com/cert.pem' /etc/turnserver.conf
+sed -i '/pkey=/c pkey=/etc/letsEncrypt/live/turn.example.com/privkey.pem' /etc/turnserver.conf
+
+mkdir -p /etc/coturn/ /var/lib/turn
+cp /etc/turnserver.conf /etc/coturn/coturn.conf
+
+apt-get -y autoremove ; aptitude -y autoclean ; apt-get -y autoclean
+rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.aptitude
