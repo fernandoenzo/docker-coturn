@@ -5,7 +5,9 @@ set -x  # All executed commands are printed to the terminal
 
 mv /tmp/boot /usr/local/boot
 
-aptitude update ; aptitude install -y coturn pwgen
+echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list
+
+aptitude update ; aptitude install -t buster-backports -y coturn pwgen
 
 TURN_KEY=$(pwgen 64 1)
 
