@@ -7,7 +7,7 @@ Wants=network-online.target
 
 [Service]
 TimeoutStartSec=infinity
-ExecStartPre=/usr/bin/docker run -d -it --init --rm --network host --name Coturn --hostname Coturn fernandoenzo/coturn
+ExecStartPre=/usr/bin/docker run -d -it --init --rm --network host --name Coturn --hostname Coturn ghcr.io/fernandoenzo/coturn:latest
 ExecStart=/usr/bin/docker logs -f Coturn
 ExecStop=-/usr/bin/docker stop Coturn
 Restart=always
